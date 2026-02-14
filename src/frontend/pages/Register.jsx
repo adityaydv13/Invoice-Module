@@ -23,7 +23,7 @@ export default function Register() {
       const data = await res.json();
 
       if (!res.ok) setError(data.message);
-      else navigate("/login"); // redirect to Login after registration
+      else navigate("/login");  
     } catch (err) {
       setError("Server error");
     }

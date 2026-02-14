@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "../styling/AddInvoice.css";
 
@@ -15,6 +15,15 @@ export default function AddInvoice() {
   const [lines, setLines] = useState([
     { description: "", quantity: 1, unitPrice: 0 },
   ]);
+
+  // Check authentication on mount
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      alert("Please login first to create an invoice");
+      navigate("/login");
+    }
+  }, [navigate]);
 
   const handleChange = (e) =>
     setForm({ ...form, [e.target.name]: e.target.value });

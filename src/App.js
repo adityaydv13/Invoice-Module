@@ -7,7 +7,7 @@ import Register from "./frontend/pages/Register.jsx";
 
 function App() {
   return (
-     
+    <Router>
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
@@ -15,7 +15,7 @@ function App() {
         <Route path="/invoice/:id" element={<InvoiceDetails />} />
         <Route path="/add-invoice" element={<AddInvoice />} />
       </Routes>
-     
+    </Router>
   );
 }
 

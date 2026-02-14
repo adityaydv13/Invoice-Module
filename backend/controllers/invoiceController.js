@@ -136,6 +136,14 @@ export const createInvoice = async (req, res) => {
     res.status(201).json(invoice);
   } catch (error) {
     console.error(error);
+
+    // Check for duplicate invoice number error
+    if (error.code === 11000 && error.keyPattern?.invoiceNumber) {
+      return res.status(400).json({
+        message: `Invoice number "${error.keyValue.invoiceNumber}" already exists. Please use a different invoice number.`,
+      });
+    }
+
     res.status(500).json({ message: "Failed to create invoice" });
   }
 };
