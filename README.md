@@ -26,7 +26,8 @@ PORT=3000
 REACT_APP_BACKEND_URL=http://localhost:5000
 
 Create a .env file in the backend folder:
-MONGO_URL=your_mongo_connection_string
+MONGO_URL=<your_mongo_connection_string>
+JWT_SECRET=<your_jwt_secret?
 
 
 From the backend folder:
