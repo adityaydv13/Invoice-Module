@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
 
-const JWT_SECRET = "your_jwt_secret"; // Should match authController.js
+// const JWT_SECRET = "your_jwt_secret"; // Should match authController.js
 
 const authMiddleware = (req, res, next) => {
   try {
