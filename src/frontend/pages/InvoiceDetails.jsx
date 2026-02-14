@@ -16,14 +16,22 @@ export default function InvoiceDetails() {
     try {
       setLoading(true);
       setError(null);
+      const token = localStorage.getItem("token");
       const res = await axios.get(
         `${process.env.REACT_APP_BACKEND_URL}/api/invoices/${id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
       );
       setData(res.data);
     } catch (err) {
       console.error("Error fetching invoice:", err);
       if (err.response && err.response.status === 404) {
         setError("No invoice found with this ID");
+      } else if (err.response && err.response.status === 403) {
+        setError("Access denied - This invoice belongs to another user");
       } else {
         setError("Failed to load invoice. Please try again.");
       }

@@ -2,12 +2,30 @@ import Invoice from "../models/Invoice.js";
 import InvoiceLine from "../models/InvoiceLine.js";
 import Payment from "../models/Payment.js";
 
-// GET invoice details
+// GET all invoices (only for logged-in user)
+export const getAllInvoices = async (req, res) => {
+  try {
+    const invoices = await Invoice.find({ userId: req.user.id }).sort({
+      _id: -1,
+    });
+    res.json(invoices);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+// GET invoice details (verify ownership)
 export const getInvoiceDetails = async (req, res) => {
   try {
     const id = req.params.id.trim();
     const invoice = await Invoice.findById(id);
     if (!invoice) return res.status(404).json({ message: "Invoice not found" });
+
+    // Verify ownership
+    if (invoice.userId.toString() !== req.user.id) {
+      return res.status(403).json({ message: "Access denied" });
+    }
 
     const lines = await InvoiceLine.find({ invoiceId: id });
     const payments = await Payment.find({ invoiceId: id });
@@ -29,7 +47,7 @@ export const getInvoiceDetails = async (req, res) => {
   }
 };
 
-// POST payment
+// POST payment (verify ownership)
 export const addPayment = async (req, res) => {
   try {
     const { id } = req.params;
@@ -37,6 +55,11 @@ export const addPayment = async (req, res) => {
 
     const invoice = await Invoice.findById(id);
     if (!invoice) return res.status(404).json({ message: "Invoice not found" });
+
+    // Verify ownership
+    if (invoice.userId.toString() !== req.user.id) {
+      return res.status(403).json({ message: "Access denied" });
+    }
 
     // calculate current balance
     const lines = await InvoiceLine.find({ invoiceId: id });
@@ -47,11 +70,9 @@ export const addPayment = async (req, res) => {
 
     // Validation checks
     if (balanceDue <= 0) {
-      return res
-        .status(400)
-        .json({
-          message: "This invoice is already fully paid. No payment needed.",
-        });
+      return res.status(400).json({
+        message: "This invoice is already fully paid. No payment needed.",
+      });
     }
 
     if (amount <= 0) {
@@ -61,11 +82,9 @@ export const addPayment = async (req, res) => {
     }
 
     if (amount > balanceDue) {
-      return res
-        .status(400)
-        .json({
-          message: `Payment cannot exceed the remaining balance of ₹${balanceDue.toFixed(2)}`,
-        });
+      return res.status(400).json({
+        message: `Payment cannot exceed the remaining balance of ₹${balanceDue.toFixed(2)}`,
+      });
     }
 
     const payment = await Payment.create({
@@ -81,13 +100,14 @@ export const addPayment = async (req, res) => {
   }
 };
 
-// POST create invoice
+// POST create invoice (associate with logged-in user)
 export const createInvoice = async (req, res) => {
   try {
     const { invoiceNumber, customerName, issueDate, dueDate, status, lines } =
       req.body;
 
     const invoice = new Invoice({
+      userId: req.user.id, // Associate with logged-in user
       invoiceNumber,
       customerName,
       issueDate,

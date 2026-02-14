@@ -1,10 +1,17 @@
 import express from "express";
-import { getInvoiceDetails, addPayment, createInvoice } from "../controllers/invoiceController.js";
+import {
+  getAllInvoices,
+  getInvoiceDetails,
+  addPayment,
+  createInvoice,
+} from "../controllers/invoiceController.js";
+import authMiddleware from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
-router.get("/:id", getInvoiceDetails);
-router.post("/", createInvoice);
-router.post("/:id/payments", addPayment);
+router.get("/", authMiddleware, getAllInvoices);
+router.get("/:id", authMiddleware, getInvoiceDetails);
+router.post("/", authMiddleware, createInvoice);
+router.post("/:id/payments", authMiddleware, addPayment);
 
 export default router;

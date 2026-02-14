@@ -54,11 +54,15 @@ export default function AddInvoice() {
     }
 
     try {
+      const token = localStorage.getItem("token");
       const res = await fetch(
         `${process.env.REACT_APP_BACKEND_URL}/api/invoices`,
         {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
           body: JSON.stringify({
             ...form,
             lines: validLines,

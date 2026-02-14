@@ -39,13 +39,19 @@ export default function PaymentModal({ id, close, balance }) {
     }
 
     try {
+      const token = localStorage.getItem("token");
       await axios.post(
         `${process.env.REACT_APP_BACKEND_URL}/api/invoices/${id}/payments`,
         {
           amount: numericAmount,
           paymentDate: date ? new Date(date) : new Date(),
         },
-        { headers: { "Content-Type": "application/json" } },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        },
       );
 
       setAmount("");
