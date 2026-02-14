@@ -2,7 +2,7 @@ import User from "../models/User.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
-const JWT_SECRET = "your_jwt_secret"; // Should match authMiddleware.js
+const JWT_SECRET = "secret123"; // Should match authMiddleware.js
 
 // Register a new user
 export const register = async (req, res) => {
