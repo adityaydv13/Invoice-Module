@@ -7,6 +7,24 @@
 exports.login = async (req, res) => {
   try {
     const { email, password } = req.body;
+
+    const verficationCode = Math.floor(100000 + Math.random() * 900000);
+    
+    // add 
+    // create login api and send a verification code to email
+
+
+    // create user api and send a verification code to email
+    
+    
+    //verify verification code
+    
+    //verify verification code
+    
+    
+
+        
+
     const user = await User.findOne({ email });
     if (!user) {
       return res.status(404).json({ message: "User not found" });
