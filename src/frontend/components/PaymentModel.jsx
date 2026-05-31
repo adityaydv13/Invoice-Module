@@ -38,7 +38,7 @@ export default function PaymentModal({ id, close, balance }) {
       return;
     }
 
-    try {
+    try{
       const token = localStorage.getItem("token");
       await axios.post(
         `${process.env.REACT_APP_BACKEND_URL}/api/invoices/${id}/payments`,
